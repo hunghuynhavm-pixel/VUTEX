@@ -1,0 +1,52 @@
+name: Đăng bài lên GHL
+
+on:
+  # Tự động chạy khi anh thêm/sửa file bài trong thư mục content/
+  push:
+    branches: [main]
+    paths:
+      - "content/**"
+  # Cho phép bấm nút chạy tay trong tab Actions
+  workflow_dispatch:
+  # (Tuỳ chọn) chạy theo lịch — mặc định TẮT. Bỏ dấu # để bật, ví dụ 8h sáng VN mỗi ngày:
+  # schedule:
+  #   - cron: "0 1 * * *"   # 01:00 UTC = 08:00 giờ Việt Nam
+
+permissions:
+  contents: write   # để commit lại sổ .ghl_posted.json
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout mã nguồn
+        uses: actions/checkout@v4
+
+      - name: Cài đặt Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cài thư viện
+        run: pip install -r requirements.txt
+
+      - name: Đăng bài lên GHL
+        env:
+          GHL_TOKEN: ${{ secrets.GHL_TOKEN }}
+          GHL_LOCATION_ID: ${{ secrets.GHL_LOCATION_ID }}
+          GHL_BLOG_ID: ${{ secrets.GHL_BLOG_ID }}
+          GHL_AUTHOR_ID: ${{ secrets.GHL_AUTHOR_ID }}
+        run: python post.py
+
+      - name: Lưu lại sổ bài đã đăng
+        if: always()
+        run: |
+          if [[ -n "$(git status --porcelain .ghl_posted.json)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add .ghl_posted.json
+            git commit -m "chore: cập nhật sổ bài đã đăng [skip ci]"
+            git push
+          else
+            echo "Không có thay đổi trong sổ."
+          fi
