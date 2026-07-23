@@ -1,0 +1,527 @@
+<title>Bộ Não Thứ 2 — Slide thuyết trình</title>
+<style>
+  :root{
+    --violet:#7C5CFF; --violet-deep:#4A2FD0; --violet-soft:#EEE9FF;
+    --coral:#D97757; --coral-deep:#BF5E3D; --coral-soft:#FBEDE6;
+    --bg:#F4F2FB; --stage:#E7E3F4; --surface:#FFFFFF;
+    --ink:#1B1626; --muted:#6A6482; --line:#E7E3F4; --line-strong:#D8D2EC;
+    --accent:var(--violet); --accent-inkable:var(--violet-deep);
+    --code-bg:#1E1830; --code-ink:#EAE6F7; --code-dim:#9A93B8; --code-green:#8CE99A; --code-cmd:#FFFFFF;
+    --shadow:0 2cqmin 6cqmin rgba(40,26,92,.10);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#181226; --stage:#0E0A1A; --surface:#211B36;
+      --ink:#EFEBF9; --muted:#A79FC4; --line:#322A4C; --line-strong:#3E3560;
+      --violet-soft:#2A2148; --coral-soft:#3A2418;
+      --accent:#AD93FF; --accent-inkable:#C4B2FF;
+      --shadow:0 2cqmin 7cqmin rgba(0,0,0,.45);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#F4F2FB; --stage:#E7E3F4; --surface:#FFFFFF;
+    --ink:#1B1626; --muted:#6A6482; --line:#E7E3F4; --line-strong:#D8D2EC;
+    --violet-soft:#EEE9FF; --coral-soft:#FBEDE6;
+    --accent:var(--violet); --accent-inkable:var(--violet-deep);
+    --shadow:0 2cqmin 6cqmin rgba(40,26,92,.10);
+  }
+  :root[data-theme="dark"]{
+    --bg:#181226; --stage:#0E0A1A; --surface:#211B36;
+    --ink:#EFEBF9; --muted:#A79FC4; --line:#322A4C; --line-strong:#3E3560;
+    --violet-soft:#2A2148; --coral-soft:#3A2418;
+    --accent:#AD93FF; --accent-inkable:#C4B2FF;
+    --shadow:0 2cqmin 7cqmin rgba(0,0,0,.45);
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--stage); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:flex; align-items:center; justify-content:center;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .deck{
+    position:relative;
+    width:min(100vw, calc(100vh * 16 / 9));
+    height:min(100vh, calc(100vw * 9 / 16));
+    background:var(--bg);
+    container-type:size;
+    overflow:hidden;
+    box-shadow:0 0 0 1px var(--line), 0 4cqmin 12cqmin rgba(0,0,0,.18);
+  }
+
+  /* ---- Slides ---- */
+  .slide{
+    position:absolute; inset:0;
+    padding:8cqmin 9cqmin;
+    display:flex; flex-direction:column; justify-content:center; gap:3cqmin;
+    opacity:0; visibility:hidden; transform:translateX(3cqmin);
+    transition:opacity .45s ease, transform .45s ease;
+  }
+  .slide.active{opacity:1; visibility:visible; transform:none}
+  @media (prefers-reduced-motion:reduce){
+    .slide{transition:opacity .2s ease; transform:none}
+  }
+
+  .eyebrow{
+    display:flex; align-items:center; gap:1.6cqmin;
+    font-size:2.2cqmin; font-weight:800; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--accent);
+  }
+  .eyebrow::before{content:""; width:5cqmin; height:.4cqmin; border-radius:2px; background:var(--coral)}
+  h1{font-size:11cqmin; line-height:1.02; margin:0; font-weight:850; letter-spacing:-.02em; text-wrap:balance}
+  h2{font-size:6.6cqmin; line-height:1.06; margin:0; font-weight:820; letter-spacing:-.01em; text-wrap:balance}
+  .sub{font-size:3.1cqmin; line-height:1.45; color:var(--muted); margin:0; max-width:78%}
+  .accent{color:var(--accent)}
+  .accent-coral{color:var(--coral)}
+
+  /* ---- Brand logos ---- */
+  .mark{width:1em; height:1em; flex:none; display:inline-block; vertical-align:middle}
+  .brandrow{display:flex; align-items:center; gap:4.5cqmin; font-size:4.6cqmin; font-weight:800; margin-top:1cqmin}
+  .brand{display:flex; align-items:center; gap:2cqmin}
+  .brand .mark{font-size:8.5cqmin}
+  .brand.obsidian{color:var(--violet-deep)}
+  :root[data-theme="dark"] .brand.obsidian{color:#C4B2FF}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .brand.obsidian{color:#C4B2FF}}
+  .brand.claude{color:var(--coral-deep)}
+  :root[data-theme="dark"] .brand.claude{color:#E68C6B}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .brand.claude{color:#E68C6B}}
+  .plus{font-size:5cqmin; color:var(--muted); font-weight:600}
+
+  /* ---- Generic cards ---- */
+  .cards{display:grid; gap:3cqmin; margin-top:1cqmin}
+  .cards.c3{grid-template-columns:repeat(3,1fr)}
+  .cards.c2{grid-template-columns:1fr 1fr}
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:3.4cqmin;
+    padding:4.5cqmin 4cqmin; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:1.4cqmin;
+  }
+  .card .emo{font-size:8cqmin; line-height:1}
+  .card b{font-size:3.5cqmin; font-weight:800}
+  .card span{font-size:2.7cqmin; color:var(--muted); line-height:1.4}
+  .card.hi{border-color:var(--accent); background:var(--violet-soft)}
+  .card.hi.coral{border-color:var(--coral); background:var(--coral-soft)}
+
+  /* ---- Flow (arrows) ---- */
+  .flow{display:flex; align-items:stretch; gap:2.4cqmin; margin-top:1cqmin}
+  .flow .card{flex:1}
+  .flow .arrow{display:flex; align-items:center; color:var(--line-strong); font-size:6cqmin; font-weight:700}
+
+  /* ---- raw/wiki columns ---- */
+  .col{background:var(--surface); border:1px solid var(--line); border-radius:3.4cqmin; overflow:hidden; box-shadow:var(--shadow)}
+  .col .h{padding:3cqmin 3.6cqmin; font-size:3.4cqmin; font-weight:800; display:flex; align-items:center; gap:1.6cqmin}
+  .col.inp .h{background:var(--coral-soft); color:var(--coral-deep)}
+  .col.out .h{background:var(--violet-soft); color:var(--violet-deep)}
+  :root[data-theme="dark"] .col.out .h{color:#C4B2FF}
+  :root[data-theme="dark"] .col.inp .h{color:#E68C6B}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .col.out .h{color:#C4B2FF} :root:not([data-theme="light"]) .col.inp .h{color:#E68C6B}}
+  .col .b{padding:3cqmin 3.6cqmin}
+  .col .b p{margin:0 0 1.6cqmin; font-size:2.9cqmin; line-height:1.4}
+  .col ul{margin:.6cqmin 0 0; padding-left:4cqmin}
+  .col li{font-size:2.7cqmin; line-height:1.7; color:var(--muted)}
+  .col li b{color:var(--ink)}
+
+  /* ---- Steps grid (6) ---- */
+  .steps6{display:grid; grid-template-columns:repeat(3,1fr); gap:2.6cqmin; margin-top:1cqmin}
+  .scard{background:var(--surface); border:1px solid var(--line); border-radius:3cqmin; padding:3.4cqmin; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:1cqmin}
+  .scard .top{display:flex; align-items:center; gap:1.8cqmin}
+  .num{width:6.4cqmin; height:6.4cqmin; flex:none; border-radius:1.8cqmin; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:850; font-size:3.4cqmin}
+  .scard .top b{font-size:3cqmin; font-weight:800}
+  .scard .top .mark{font-size:5cqmin; margin-left:auto}
+  .scard span{font-size:2.5cqmin; color:var(--muted); line-height:1.4}
+  .time{font-size:2.2cqmin; color:var(--accent); font-weight:700}
+
+  /* ---- Big single step layout ---- */
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:5cqmin; align-items:center; margin-top:1.5cqmin}
+  .visual{display:flex; align-items:center; justify-content:center; padding:3cqmin}
+  .visual .mark{font-size:44cqmin}
+  .visual .emo{font-size:40cqmin; line-height:1}
+  .dolist{display:flex; flex-direction:column; gap:2.6cqmin}
+  .do{display:flex; gap:2.4cqmin; align-items:flex-start}
+  .do .k{width:6cqmin; height:6cqmin; flex:none; border-radius:50%; border:.4cqmin solid var(--accent); color:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:850; font-size:3cqmin}
+  .do .t{font-size:3cqmin; line-height:1.4}
+  .do .t b{font-weight:800}
+
+  .pill{display:inline-block; background:var(--violet-soft); color:var(--accent-inkable); border:1px solid var(--line-strong); border-radius:1.4cqmin; padding:.3cqmin 1.6cqmin; font-size:2.5cqmin; font-weight:700; font-family:"SF Mono",Menlo,Consolas,monospace}
+
+  .note{border-radius:2.6cqmin; padding:3cqmin 3.4cqmin; font-size:2.8cqmin; line-height:1.45; margin-top:1cqmin; display:flex; gap:2cqmin; align-items:flex-start}
+  .note.tip{background:var(--violet-soft); border:1px solid var(--line-strong)}
+  .note.warn{background:var(--coral-soft); border:1px solid #eec9b6}
+  :root[data-theme="dark"] .note.warn{border-color:#5a3a28}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .note.warn{border-color:#5a3a28}}
+  .note .ico{font-size:3.6cqmin; line-height:1}
+
+  /* ---- Terminal ---- */
+  .term{background:var(--code-bg); border-radius:2.6cqmin; overflow:hidden; box-shadow:var(--shadow); margin-top:1cqmin}
+  .term .bar{background:#2A2340; padding:2cqmin 3cqmin; display:flex; align-items:center; gap:1.4cqmin}
+  .dot{width:2.4cqmin; height:2.4cqmin; border-radius:50%}
+  .d1{background:#ff5f57}.d2{background:#febc2e}.d3{background:#28c840}
+  .term .bar span{color:var(--code-dim); font-size:2.4cqmin; margin-left:1.4cqmin}
+  .term pre{margin:0; padding:3.4cqmin 4cqmin; font-family:"SF Mono",Menlo,Consolas,monospace; font-size:2.9cqmin; line-height:1.9; color:var(--code-ink); overflow-x:auto; white-space:pre-wrap}
+  .term .cmd{color:var(--code-cmd)} .term .dim{color:var(--code-dim)} .term .ok{color:var(--code-green)} .term .cor{color:#F0A47F}
+
+  /* ---- Final ---- */
+  .final{display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:3cqmin}
+  .final .brandrow{justify-content:center}
+  .cta{display:flex; gap:3cqmin; margin-top:1cqmin}
+  .cta .chip{background:var(--surface); border:1px solid var(--line); border-radius:2cqmin; padding:2cqmin 3.6cqmin; font-size:3cqmin; font-weight:800; box-shadow:var(--shadow)}
+
+  /* ---- Chrome: dots, counter, buttons ---- */
+  .chrome{position:absolute; left:0; right:0; bottom:0; height:8cqmin; display:flex; align-items:center; justify-content:space-between; padding:0 4cqmin; pointer-events:none}
+  .dots{display:flex; gap:1.4cqmin; pointer-events:auto}
+  .dots button{width:1.8cqmin; height:1.8cqmin; padding:0; border:none; border-radius:50%; background:var(--line-strong); cursor:pointer; transition:transform .2s, background .2s}
+  .dots button.on{background:var(--accent); transform:scale(1.35)}
+  .dots button:focus-visible{outline:.5cqmin solid var(--coral); outline-offset:.5cqmin}
+  .counter{font-size:2.6cqmin; color:var(--muted); font-weight:700; font-variant-numeric:tabular-nums; pointer-events:auto}
+  .navbtns{display:flex; gap:1.4cqmin; pointer-events:auto}
+  .navbtns button, .fsbtn{
+    width:6cqmin; height:6cqmin; border-radius:1.6cqmin; border:1px solid var(--line-strong);
+    background:var(--surface); color:var(--ink); font-size:3cqmin; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .navbtns button:hover, .fsbtn:hover{border-color:var(--accent); color:var(--accent)}
+  .navbtns button:focus-visible, .fsbtn:focus-visible{outline:.5cqmin solid var(--coral); outline-offset:.3cqmin}
+  .topbar{position:absolute; top:3.5cqmin; right:4cqmin; display:flex; gap:1.4cqmin; z-index:5}
+
+  /* click zones for prev/next */
+  .zone{position:absolute; top:0; bottom:8cqmin; width:28%; cursor:pointer; z-index:2}
+  .zone.prev{left:0} .zone.next{right:0}
+
+  .pagetag{position:absolute; top:4cqmin; left:9cqmin; font-size:2.4cqmin; font-weight:800; letter-spacing:.2em; text-transform:uppercase; color:var(--muted)}
+</style>
+
+<div class="deck" id="deck">
+
+  <!-- hidden SVG symbols -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="obg1" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#C3B2FF"/><stop offset="1" stop-color="#6C4CF0"/>
+      </linearGradient>
+      <linearGradient id="obg2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#8A6BFF"/><stop offset="1" stop-color="#4A2FD0"/>
+      </linearGradient>
+    </defs>
+    <symbol id="logo-obsidian" viewBox="0 0 100 100">
+      <path d="M50 5 L86 39 L60 95 L30 95 L14 39 Z" fill="url(#obg2)"/>
+      <path d="M50 5 L14 39 L45 57 Z" fill="url(#obg1)"/>
+      <path d="M50 5 L86 39 L45 57 Z" fill="url(#obg1)" opacity="0.62"/>
+      <path d="M45 57 L30 95 L60 95 Z" fill="#5A3CE0" opacity="0.85"/>
+      <path d="M45 57 L60 95 L86 39 Z" fill="#3E2AB8" opacity="0.55"/>
+    </symbol>
+    <symbol id="logo-claude" viewBox="0 0 100 100">
+      <g id="claude-rays" stroke="#D97757" stroke-width="7.5" stroke-linecap="round"></g>
+    </symbol>
+  </svg>
+
+  <!-- 1 TITLE -->
+  <section class="slide" data-tag="">
+    <div class="eyebrow">Hệ thống học tập cá nhân · Miễn phí</div>
+    <h1>Bộ Não <span class="accent">Thứ 2</span></h1>
+    <p class="sub">Kết hợp Obsidian và Claude Code để tạo một kho tri thức cá nhân — tự động sắp xếp, luôn sẵn sàng trả lời bạn.</p>
+    <div class="brandrow">
+      <span class="brand obsidian"><svg class="mark"><use href="#logo-obsidian"/></svg>Obsidian</span>
+      <span class="plus">+</span>
+      <span class="brand claude"><svg class="mark"><use href="#logo-claude"/></svg>Claude Code</span>
+    </div>
+  </section>
+
+  <!-- 2 PAIN -->
+  <section class="slide" data-tag="Vấn đề">
+    <div class="eyebrow">Bạn có thấy quen không?</div>
+    <h2>3 nỗi đau khi học mà ai cũng gặp</h2>
+    <div class="cards c3">
+      <div class="card"><div class="emo">😵</div><b>Học xong quên</b><span>2 tuần sau gần như không nhớ được gì.</span></div>
+      <div class="card"><div class="emo">📓</div><b>Ghi chú bỏ xó</b><span>Viết đầy vở, đầy điện thoại nhưng không mở lại.</span></div>
+      <div class="card"><div class="emo">🤷</div><b>Không biết dùng</b><span>Biết lý thuyết nhưng tới lúc cần không áp dụng được.</span></div>
+    </div>
+  </section>
+
+  <!-- 3 SOLUTION -->
+  <section class="slide" data-tag="Giải pháp">
+    <div class="eyebrow">Ba thứ làm việc cùng nhau</div>
+    <h2>Cách bộ não thứ 2 vận hành</h2>
+    <div class="flow">
+      <div class="card"><svg class="mark" style="font-size:8cqmin"><use href="#logo-obsidian"/></svg><b>Obsidian</b><span>Nơi lưu ghi chú — ngay trên máy bạn, miễn phí.</span></div>
+      <div class="arrow">→</div>
+      <div class="card hi coral"><svg class="mark" style="font-size:8cqmin"><use href="#logo-claude"/></svg><b>Claude Code</b><span>AI tự đọc tài liệu và tạo wiki cho bạn.</span></div>
+      <div class="arrow">→</div>
+      <div class="card"><div class="emo">✨</div><b>Wiki cá nhân</b><span>Kho tri thức luôn cập nhật, tìm kiếm được.</span></div>
+    </div>
+    <div class="note tip"><span class="ico">💡</span><span><b>Nói đơn giản:</b> Bạn bỏ tài liệu vào → Claude đọc và xử lý → tự tạo kho tri thức gọn gàng. Cần gì, chỉ việc hỏi.</span></div>
+  </section>
+
+  <!-- 4 RAW/WIKI -->
+  <section class="slide" data-tag="Nền tảng">
+    <div class="eyebrow">Hiểu 2 cái này là hiểu 80%</div>
+    <h2><span class="accent-coral">raw/</span> và <span class="accent">wiki/</span> là gì?</h2>
+    <div class="cards c2">
+      <div class="col inp">
+        <div class="h">📥 raw/ — Kho ĐẦU VÀO</div>
+        <div class="b">
+          <p><b>Chỗ bạn bỏ tài liệu vào.</b> Không cần sắp xếp, không cần đặt tên đẹp.</p>
+          <ul><li>Ghi chú sau buổi học</li><li>Bài viết hay, PDF, ảnh chụp</li><li>Ý tưởng chợt nảy ra</li><li>Transcript video, podcast</li></ul>
+        </div>
+      </div>
+      <div class="col out">
+        <div class="h">📚 wiki/ — Kho KẾT QUẢ</div>
+        <div class="b">
+          <p><b>Claude đọc raw/ rồi tự tạo file gọn gàng.</b> Bạn không phải tự viết gì.</p>
+          <ul><li><b>learn/</b> — tóm tắt khoá học</li><li><b>work/</b> — kế hoạch, dự án</li><li><b>people/</b> — thông tin về người</li><li><b>life/</b> — sức khoẻ, tài chính</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 DAILY LOOP -->
+  <section class="slide" data-tag="Quy trình">
+    <div class="eyebrow">Chỉ 3 nhịp, lặp lại mỗi ngày</div>
+    <h2>Quy trình sử dụng hằng ngày</h2>
+    <div class="flow">
+      <div class="card hi"><div class="emo">📥</div><b>1. Bỏ vào raw/</b><span>Kéo thả tài liệu bất kỳ vào thư mục raw.</span></div>
+      <div class="arrow">→</div>
+      <div class="card hi coral"><div class="emo">💬</div><b>2. "Nạp nguồn này"</b><span>Nói với Claude một câu đời thường.</span></div>
+      <div class="arrow">→</div>
+      <div class="card hi"><div class="emo">✨</div><b>3. Claude tạo wiki</b><span>Tự tóm tắt, liên kết chéo, ghi nhật ký.</span></div>
+    </div>
+    <div class="note tip"><span class="ico">🔑</span><span>Không cần biết kỹ thuật, không cần sắp xếp. Càng bỏ nhiều vào, bộ não càng thông minh.</span></div>
+  </section>
+
+  <!-- 6 INSTALL OVERVIEW -->
+  <section class="slide" data-tag="Cài đặt">
+    <div class="eyebrow">Cài một lần, dùng mãi</div>
+    <h2>Cài đặt trong <span class="accent">6 bước</span></h2>
+    <div class="steps6">
+      <div class="scard"><div class="top"><div class="num">1</div><b>Obsidian</b><svg class="mark"><use href="#logo-obsidian"/></svg></div><span>App quản lý ghi chú.</span><span class="time">⏱ 3 phút</span></div>
+      <div class="scard"><div class="top"><div class="num">2</div><b>Node.js</b><span style="margin-left:auto">⚙️</span></div><span>Nền để Claude Code chạy.</span><span class="time">⏱ 3 phút</span></div>
+      <div class="scard"><div class="top"><div class="num">3</div><b>Claude Code</b><svg class="mark"><use href="#logo-claude"/></svg></div><span>AI đọc & tạo wiki.</span><span class="time">⏱ 5 phút</span></div>
+      <div class="scard"><div class="top"><div class="num">4</div><b>Git</b><span style="margin-left:auto">🕘</span></div><span>Lưu lịch sử, hoàn tác được.</span><span class="time">⏱ 3 phút</span></div>
+      <div class="scard"><div class="top"><div class="num">5</div><b>Tạo vault</b><span style="margin-left:auto">📁</span></div><span>Một thư mục rỗng trên Desktop.</span><span class="time">⏱ 1 phút</span></div>
+      <div class="scard"><div class="top"><div class="num">6</div><b>Kết nối</b><span style="margin-left:auto">🔗</span></div><span>Mở vault trong Obsidian.</span><span class="time">⏱ 2 phút</span></div>
+    </div>
+  </section>
+
+  <!-- 7 STEP 1 -->
+  <section class="slide" data-tag="Bước 1 / 6">
+    <div class="eyebrow">Bước 1 — Cài Obsidian</div>
+    <h2>App để xem & quản lý ghi chú</h2>
+    <div class="split">
+      <div class="dolist">
+        <div class="do"><div class="k">1</div><div class="t">Vào <b>obsidian.md</b> → bấm nút <b>Download</b> lớn.</div></div>
+        <div class="do"><div class="k">2</div><div class="t">Chọn đúng hệ điều hành (Mac / Windows).</div></div>
+        <div class="do"><div class="k">3</div><div class="t">Mở file → <b>Next</b> liên tục → <b>Finish</b>.</div></div>
+        <div class="note tip"><span class="ico">✅</span><span>Mở thử thấy màn hình hỏi tạo vault → <b>đóng lại</b>, chưa cần làm gì.</span></div>
+      </div>
+      <div class="visual"><svg class="mark"><use href="#logo-obsidian"/></svg></div>
+    </div>
+  </section>
+
+  <!-- 8 STEP 2 -->
+  <section class="slide" data-tag="Bước 2 / 6">
+    <div class="eyebrow">Bước 2 — Cài Node.js</div>
+    <h2>Cái nền để Claude Code chạy được</h2>
+    <div class="split">
+      <div class="dolist">
+        <div class="do"><div class="k">1</div><div class="t">Vào <b>nodejs.org</b>.</div></div>
+        <div class="do"><div class="k">2</div><div class="t">Bấm nút xanh lớn có chữ <b>LTS</b>.</div></div>
+        <div class="do"><div class="k">3</div><div class="t">Mở file → <b>Next</b> → <b>Install</b> → <b>Finish</b>.</div></div>
+        <div class="note warn"><span class="ico">⚠️</span><span>Cài xong <b>không có icon app mới</b> — Node chạy ngầm. Hoàn toàn bình thường.</span></div>
+      </div>
+      <div class="visual"><div class="emo">⚙️</div></div>
+    </div>
+  </section>
+
+  <!-- 9 STEP 3 -->
+  <section class="slide" data-tag="Bước 3 / 6">
+    <div class="eyebrow">Bước 3 — Cài Claude Code</div>
+    <h2>Nhân vật chính: <span class="accent-coral">AI tạo wiki</span></h2>
+    <p class="sub">Mở Terminal (Mac: ⌘+Space → “Terminal”. Windows: Start → “cmd”), rồi dán 1 lệnh:</p>
+    <div class="term">
+      <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span>Terminal</span></div>
+      <pre><span class="dim">$</span> <span class="cmd">npm install -g @anthropic-ai/claude-code</span>
+<span class="dim">added 47 packages in 8s   ← thấy dòng này là xong</span>
+
+<span class="dim">$</span> <span class="cmd">claude --version</span>
+<span class="ok">1.x.x   ← có số phiên bản = cài thành công</span></pre>
+    </div>
+    <div class="note tip"><span class="ico">💡</span><span><b>Từ đây Claude làm được mọi thứ cho bạn:</b> bước nào phía sau thấy khó, cứ hỏi thẳng nó.</span></div>
+  </section>
+
+  <!-- 10 STEP 4 -->
+  <section class="slide" data-tag="Bước 4 / 6">
+    <div class="eyebrow">Bước 4 — Cài Git</div>
+    <h2>Chiếc “nút hoàn tác” cho cả vault</h2>
+    <div class="split">
+      <div class="dolist">
+        <div class="do"><div class="k">1</div><div class="t">Vào <b>git-scm.com</b> → <b>Download</b> → mở file → Next → Install.</div></div>
+        <div class="do"><div class="k">2</div><div class="t">Kiểm tra: Terminal gõ <span class="pill">git --version</span> → thấy <b>2.x.x</b>.</div></div>
+        <div class="note tip"><span class="ico">🍎</span><span><b>Máy Mac:</b> lần đầu có thể hiện popup cài “Command Line Tools” → bấm <b>Install</b> là xong (cũng là cách cài Git nhanh nhất).</span></div>
+      </div>
+      <div class="visual"><div class="emo">🕘</div></div>
+    </div>
+  </section>
+
+  <!-- 11 STEP 5 & 6 -->
+  <section class="slide" data-tag="Bước 5 & 6 / 6">
+    <div class="eyebrow">Bước 5 & 6 — Vault & kết nối</div>
+    <h2>Tạo thư mục rỗng, rồi mở trong Obsidian</h2>
+    <div class="cards c2">
+      <div class="col out">
+        <div class="h">📁 Bước 5 — Tạo vault</div>
+        <div class="b"><p>Ra <b>Desktop</b> → tạo thư mục mới, ví dụ <b>“Bộ não của Minh”</b>.</p>
+        <p style="color:var(--muted)"><b>Không</b> tạo gì bên trong, <b>không</b> tải file nào. Để trống hoàn toàn.</p></div>
+      </div>
+      <div class="col out">
+        <div class="h">🔗 Bước 6 — Kết nối Obsidian</div>
+        <div class="b"><p>Mở <b>Obsidian</b> → <b>“Open folder as vault”</b> → chọn thư mục → <b>Open</b>.</p>
+        <p style="color:var(--muted)">Giao diện 2 cột hiện ra, vault còn trống — hoàn toàn bình thường.</p></div>
+      </div>
+    </div>
+    <div class="note tip"><span class="ico">🎉</span><span><b>Cài đặt hoàn tất!</b> Bước tiếp theo: đánh thức bộ não thứ 2 dậy.</span></div>
+  </section>
+
+  <!-- 12 SETUP RUN -->
+  <section class="slide" data-tag="Khởi tạo">
+    <div class="eyebrow">Lần đầu mở Claude Code</div>
+    <h2>Mở đúng thư mục → dán câu lệnh setup</h2>
+    <div class="dolist" style="gap:1.8cqmin">
+      <div class="do"><div class="k">1</div><div class="t"><b>Mac:</b> chuột phải thư mục vault → <b>“New Terminal at Folder”</b>. &nbsp;<b>Windows:</b> mở thư mục → chuột phải khoảng trống → <b>“Open in Terminal”</b>.</div></div>
+      <div class="do"><div class="k">2</div><div class="t">Gõ <span class="pill">claude</span> → Enter. Cửa sổ chat hiện ra.</div></div>
+      <div class="do"><div class="k">3</div><div class="t">Dán <b>toàn bộ câu lệnh setup</b> (trong mô tả video) → Enter → ngồi xem.</div></div>
+    </div>
+    <div class="term">
+      <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span>Terminal — Bộ não của Minh</span></div>
+      <pre><span class="dim">Bộ não của Minh $</span> <span class="cmd">claude</span>
+<span class="cor">✓ Claude đang tạo:</span> CLAUDE.md · wiki/ · raw/ · production/ …
+<span class="ok">✓ Xong — in cây thư mục xác nhận đã tạo</span></pre>
+    </div>
+  </section>
+
+  <!-- 13 RESULT -->
+  <section class="slide" data-tag="Kết quả">
+    <div class="eyebrow">Bộ não thứ 2 đã sống</div>
+    <h2>Từ nay dùng chỉ đúng <span class="accent">3 nhịp</span></h2>
+    <div class="flow">
+      <div class="card hi"><div class="emo">📥</div><b>Thả vào raw/</b><span>Một PDF, một ghi chú, một link…</span></div>
+      <div class="arrow">→</div>
+      <div class="card hi coral"><div class="emo">💬</div><b>“Nạp nguồn này”</b><span>Claude đọc, tóm tắt, liên kết chéo.</span></div>
+      <div class="arrow">→</div>
+      <div class="card hi"><div class="emo">🔎</div><b>Hỏi là có</b><span>Trả lời kèm trích dẫn nguồn.</span></div>
+    </div>
+    <div class="note tip"><span class="ico">📈</span><span>Không phải lục lại đống tài liệu nữa. Càng dùng, wiki càng lớn và càng hiểu bạn.</span></div>
+  </section>
+
+  <!-- 14 CTA -->
+  <section class="slide final" data-tag="">
+    <div class="eyebrow" style="justify-content:center">Cảm ơn bạn đã xem</div>
+    <h1 style="font-size:8.5cqmin">Bắt đầu bộ não <span class="accent">của bạn</span></h1>
+    <p class="sub" style="max-width:70%; text-align:center">Link phần mềm và câu lệnh setup đều nằm trong phần mô tả bên dưới.</p>
+    <div class="brandrow" style="font-size:4cqmin">
+      <span class="brand obsidian"><svg class="mark"><use href="#logo-obsidian"/></svg>Obsidian</span>
+      <span class="plus">+</span>
+      <span class="brand claude"><svg class="mark"><use href="#logo-claude"/></svg>Claude Code</span>
+    </div>
+    <div class="cta"><span class="chip">👍 Like</span><span class="chip">🔔 Đăng ký kênh</span><span class="chip">💬 Bình luận</span></div>
+  </section>
+
+  <!-- click zones -->
+  <div class="zone prev" id="zprev"></div>
+  <div class="zone next" id="znext"></div>
+
+  <!-- top controls -->
+  <div class="topbar">
+    <button class="fsbtn" id="themeBtn" title="Đổi nền sáng/tối" aria-label="Đổi nền sáng tối">◐</button>
+    <button class="fsbtn" id="fsBtn" title="Toàn màn hình" aria-label="Toàn màn hình">⛶</button>
+  </div>
+
+  <!-- bottom chrome -->
+  <div class="chrome">
+    <div class="counter"><span id="cur">1</span> / <span id="total">14</span></div>
+    <div class="dots" id="dots"></div>
+    <div class="navbtns">
+      <button id="prevBtn" aria-label="Slide trước">‹</button>
+      <button id="nextBtn" aria-label="Slide sau">›</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Build Claude sunburst rays
+  (function(){
+    var g = document.getElementById('claude-rays');
+    var n = 12, cx = 50, cy = 50, ns = 'http://www.w3.org/2000/svg';
+    for(var i=0;i<n;i++){
+      var a = (i/n)*Math.PI*2 - Math.PI/2;
+      var r1 = 15, r2 = (i%2===0)? 45 : 37;
+      var ln = document.createElementNS(ns,'line');
+      ln.setAttribute('x1',(cx+Math.cos(a)*r1).toFixed(2));
+      ln.setAttribute('y1',(cy+Math.sin(a)*r1).toFixed(2));
+      ln.setAttribute('x2',(cx+Math.cos(a)*r2).toFixed(2));
+      ln.setAttribute('y2',(cy+Math.sin(a)*r2).toFixed(2));
+      g.appendChild(ln);
+    }
+  })();
+
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var dotsWrap = document.getElementById('dots');
+  var cur = document.getElementById('cur');
+  var total = document.getElementById('total');
+  var pageTagEl = null;
+  var i = 0;
+  total.textContent = slides.length;
+
+  slides.forEach(function(s, idx){
+    var b = document.createElement('button');
+    b.setAttribute('aria-label','Tới slide '+(idx+1));
+    b.addEventListener('click', function(){ go(idx); });
+    dotsWrap.appendChild(b);
+  });
+  var dots = Array.prototype.slice.call(dotsWrap.children);
+
+  function go(n){
+    i = Math.max(0, Math.min(slides.length-1, n));
+    slides.forEach(function(s,idx){ s.classList.toggle('active', idx===i); });
+    dots.forEach(function(d,idx){ d.classList.toggle('on', idx===i); });
+    cur.textContent = i+1;
+  }
+  function next(){ go(i+1); }
+  function prev(){ go(i-1); }
+
+  document.getElementById('nextBtn').addEventListener('click', next);
+  document.getElementById('prevBtn').addEventListener('click', prev);
+  document.getElementById('znext').addEventListener('click', next);
+  document.getElementById('zprev').addEventListener('click', prev);
+
+  document.addEventListener('keydown', function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){ e.preventDefault(); next(); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); prev(); }
+    else if(e.key==='Home'){ go(0); }
+    else if(e.key==='End'){ go(slides.length-1); }
+  });
+
+  // touch swipe
+  var sx=null;
+  document.getElementById('deck').addEventListener('touchstart', function(e){ sx=e.touches[0].clientX; }, {passive:true});
+  document.getElementById('deck').addEventListener('touchend', function(e){
+    if(sx===null) return; var dx=e.changedTouches[0].clientX - sx;
+    if(Math.abs(dx)>40){ dx<0 ? next() : prev(); } sx=null;
+  }, {passive:true});
+
+  // fullscreen
+  document.getElementById('fsBtn').addEventListener('click', function(){
+    var el = document.getElementById('deck');
+    if(!document.fullscreenElement){ (el.requestFullscreen||el.webkitRequestFullscreen).call(el); }
+    else{ document.exitFullscreen(); }
+  });
+
+  // theme toggle
+  document.getElementById('themeBtn').addEventListener('click', function(){
+    var root = document.documentElement;
+    var isDark = root.getAttribute('data-theme')==='dark'
+      || (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme:dark)').matches);
+    root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  });
+
+  go(0);
+</script>
